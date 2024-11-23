@@ -3,10 +3,12 @@
 import express from 'express'; // Import Express framework
 import mongoose from 'mongoose'; // Import Mongoose for MongoDB
 import { swaggerSetup } from './swagger.js'; // Import Swagger setup
-import apiRouter from './routes/exampleRoute.js'; // Import API routes
+import exampleApiRouter from './routes/exampleRoute.js'; // Import API routes
 import dotenv from 'dotenv'; // Import dotenv for environment variables
 import standardizedResponse from './middlewares/standardResponse.js'; // Import custom response middleware
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import errorHandler from './middlewares/errorHandler.js';
+import './utils/logger.js';
 
 dotenv.config(); // Load environment variables
 
@@ -18,12 +20,14 @@ app.use(express.json()); // Parse JSON bodies
 app.use(standardizedResponse); // Use custom response middleware
 
 // Routes
-app.use('/api', apiRouter); // Use API routes
+app.use('/api', exampleApiRouter); // Use API routes
 
 app.get('/', (req, res) => {
   // Redirect to API documentation
   res.redirect('/api-docs');
 });
+
+app.use(errorHandler);
 
 // Swagger configuration
 swaggerSetup(app);
@@ -46,6 +50,8 @@ mongoose
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error.message);
   });
+
+
 
 // Start server
 app.listen(port, () => {

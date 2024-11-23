@@ -1,5 +1,4 @@
 import exampleService from '../services/exampleService.js';
-import { NotFoundError, ValidationError } from '../utils/customErrors.js';
 
 const removeMongoFields = (data) => {
   if (Array.isArray(data)) {
@@ -16,40 +15,34 @@ const removeMongoFields = (data) => {
 export const getAllExamples = async (req, res, next) => {
   try {
     const examples = await exampleService.getAllExamples();
+    loggerInfo("Getting all examples")
     res.sendSuccess(removeMongoFields(examples));
   } catch (error) {
-    res.sendError(error);
+    next(error);
   }
 };
 
 export const createExample = async (req, res, next) => {
   try {
     const newExample = await exampleService.createExample(req.body);
+    loggerInfo(`Creating example with id: ${newExample._id}`)
     res.sendSuccess(
       removeMongoFields(newExample),
       'Example created successfully',
       201
     );
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      res.sendError(new ValidationError('Validation failed', error.errors));
-    } else {
-      res.sendError(
-        new ValidationError('An error occurred while creating the example', [
-          { msg: error.message },
-        ])
-      );
-    }
+    next(error);
   }
 };
 
 export const getExampleById = async (req, res, next) => {
   try {
     const example = await exampleService.getExampleById(req.params.id);
-    if (!example) throw new NotFoundError('Example not found');
+    loggerInfo(`Getting example with id: ${example._id}`)
     res.sendSuccess(removeMongoFields(example));
   } catch (error) {
-    res.sendError(error);
+    next(error);
   }
 };
 
@@ -62,22 +55,22 @@ export const updateExample = async (req, res, next) => {
       req.params.id,
       data
     );
-    if (!updatedExample) throw new NotFoundError('Example not found');
+    loggerInfo(`Updating example with id: ${updatedExample._id}`)
     res.sendSuccess(
       removeMongoFields(updatedExample),
       'Example updated successfully'
     );
   } catch (error) {
-    res.sendError(error);
+    next(error);
   }
 };
 
 export const deleteExample = async (req, res, next) => {
   try {
     const deletedExample = await exampleService.deleteExample(req.params.id);
-    if (!deletedExample) throw new NotFoundError('Example not found');
+    loggerInfo(`Deleting example with id: ${deletedExample._id}`)
     res.sendSuccess(null, 'Example deleted successfully', 204);
   } catch (error) {
-    res.sendError(error);
+    next(error);
   }
 };

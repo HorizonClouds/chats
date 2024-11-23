@@ -1,51 +1,30 @@
-import AppError from '../utils/customErrors.js';
+import { sendError, sendSuccess } from '../utils/standardResponse.js';
 const standardResponseMiddleware = (req, res, next) => {
   // Custom success response method
-  res.sendSuccess = (
-    data,
-    message = 'Success!',
-    statusCode = 200,
-    appCode = 'OK'
-  ) => {
-    res.status(statusCode).json({
-      status: 'success',
-      message,
-      data,
-      appCode,
-      timestamp: new Date().toISOString(),
-    });
+  /**
+   * Send a success response with a standard format
+   * @param {Object} data - The data to send
+   * @param {string} [message='Success!'] - The message to send
+   * @param {number} [statusCode=200] - The status code to send
+   * @param {string} [appCode='OK'] - The application code
+   * @returns {void}
+   * @example
+   * res.sendSuccess({ name: 'John Doe' });
+   */
+  res.sendSuccess = (data, message = 'Success!', statusCode = 200, appCode = 'OK') => {
+    sendSuccess(res, data, message, statusCode, appCode);
   };
 
   // Improved custom error response method
+  /**
+   * Send an error response with a standard format
+   * @param {Error} error - The error object
+   * @returns {void}
+   * @example
+   * res.sendError(new AppError('Resource not found', 404));
+   */
   res.sendError = (error) => {
-    // Default to 400 status for unexpected errors
-    if (process.env.DEBUG === 'true') console.error(error);
-    let statusCode = error.statusCode || 400;
-    let responseStatus = statusCode === 400 ? 'failed' : 'error';
-    let message = 'An unexpected error occurred';
-    let details = null;
-    let appCode = 'UNKNOWN_ERROR';
-
-    // Handle known AppError instances
-    if (error instanceof AppError) {
-      statusCode = error.statusCode;
-      message = error.message;
-      details = error.details;
-      appCode = error.appCode;
-    } else if (error.name === 'ValidationError') {
-      statusCode = 400;
-      message = 'Validation failed';
-      details = error.errors;
-      appCode = 'VALIDATION_ERROR';
-    }
-
-    res.status(statusCode).json({
-      status: responseStatus,
-      message,
-      appCode,
-      details,
-      timestamp: new Date().toISOString(),
-    });
+    sendError(res, error);
   };
 
   next();
