@@ -6,14 +6,174 @@ info:
 servers:
   - url: http://localhost:3000/api/v1
 paths:
-  /examples:
-    get:
-      summary: Get all examples
+  /message:
+    post:
+      summary: Create a new message
       tags:
-        - Example
+        - Message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMessage'
+      responses:
+        '201':
+          description: The created message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Message created successfully
+                  data:
+                    $ref: '#/components/schemas/Message'
+                  appCode:
+                    type: string
+                    example: OK
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Validation error
+                  appCode:
+                    type: string
+                    example: INVALID_INPUT
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
+  /message/messageStatus/{id}:
+    put:
+      summary: Update the status of a message
+      tags:
+        - Message
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the message to update
+          schema:
+            type: string
       responses:
         '200':
-          description: A list of examples
+          description: Message status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Message updated successfully
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: '60c72b2f9b1d8f0d8d0b6f9e'
+                      writerUserId:
+                        type: string
+                        example: 'user123'
+                      receiverUserId:
+                        type: string
+                        example: 'user456'
+                      messageContent:
+                        type: string
+                        example: Hello, how are you?
+                      shippingDate:
+                        type: string
+                        format: date-time
+                        example: '2023-10-01T12:00:00.000Z'
+                      messageStatus:
+                        type: string
+                        enum:
+                          - READ
+                          - UNREAD
+                        example: READ
+                  appCode:
+                    type: string
+                    example: OK
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
+        '404':
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Message not found
+                  appCode:
+                    type: string
+                    example: NOT_FOUND
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Invalid parameters
+                  appCode:
+                    type: string
+                    example: INVALID_INPUT
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
+  /chat/{writerUserId}/{receiverUserId}:
+    get:
+      summary: Get chat between two users
+      tags:
+        - Message
+      parameters:
+        - in: path
+          name: writerUserId
+          required: true
+          description: ID of the user who sent the message
+          schema:
+            type: string
+        - in: path
+          name: receiverUserId
+          required: true
+          description: ID of the user who received the message
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The chat between two users
           content:
             application/json:
               schema:
@@ -28,73 +188,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Example'
-                  appCode:
-                    type: string
-                    example: OK
-                  timestamp:
-                    type: string
-                    example: '2023-10-01T12:00:00.000Z'
-    post:
-      summary: Create a new example
-      tags:
-        - Example
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewExample'
-      responses:
-        '201':
-          description: The created example
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: success
-                  message:
-                    type: string
-                    example: Example created successfully
-                  data:
-                    $ref: '#/components/schemas/Example'
-                  appCode:
-                    type: string
-                    example: OK
-                  timestamp:
-                    type: string
-                    example: '2023-10-01T12:00:00.000Z'
-  /examples/{id}:
-    get:
-      summary: Get a specific example by ID
-      tags:
-        - Example
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID of the example to get
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The requested example
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: success
-                  message:
-                    type: string
-                    example: Success!
-                  data:
-                    $ref: '#/components/schemas/Example'
+                      $ref: '#/components/schemas/Message'
                   appCode:
                     type: string
                     example: OK
@@ -102,7 +196,7 @@ paths:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
         '404':
-          description: Example not found
+          description: Chat not found
           content:
             application/json:
               schema:
@@ -113,54 +207,15 @@ paths:
                     example: error
                   message:
                     type: string
-                    example: Example not found
+                    example: Chat not found
                   appCode:
                     type: string
-                    example: UNKNOWN_ERROR
+                    example: NOT_FOUND
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
-    put:
-      summary: Update an existing example by ID
-      tags:
-        - Example
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID of the example to update
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Example'
-      responses:
-        '200':
-          description: The updated example
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: success
-                  message:
-                    type: string
-                    example: Example updated successfully
-                  data:
-                    $ref: '#/components/schemas/Example'
-                  appCode:
-                    type: string
-                    example: OK
-                  timestamp:
-                    type: string
-                    example: '2023-10-01T12:00:00.000Z'
-        '404':
-          description: Example not found
+        '400':
+          description: Invalid parameters
           content:
             application/json:
               schema:
@@ -171,72 +226,59 @@ paths:
                     example: error
                   message:
                     type: string
-                    example: Example not found
+                    example: Invalid parameters
                   appCode:
                     type: string
-                    example: UNKNOWN_ERROR
-                  timestamp:
-                    type: string
-                    example: '2023-10-01T12:00:00.000Z'
-    delete:
-      summary: Delete an example by ID
-      tags:
-        - Example
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID of the example to delete
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Successfully deleted
-        '404':
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  message:
-                    type: string
-                    example: Example not found
-                  appCode:
-                    type: string
-                    example: UNKNOWN_ERROR
+                    example: INVALID_INPUT
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
 components:
   schemas:
-    Example:
+    Message:
       type: object
       properties:
         _id:
           type: string
           example: '60c72b2f9b1d8f0d8d0b6f9e'
-        name:
+        writerUserId:
           type: string
-          example: Example Name
-        value:
-          type: number
-          example: 123
+          example: 'user123'
+        receiverUserId:
+          type: string
+          example: 'user456'
+        messageContent:
+          type: string
+          example: Hello, how are you?
+        shippingDate:
+          type: string
+          format: date-time
+          example: '2023-10-01T12:00:00.000Z'
+        messageStatus:
+          type: string
+          enum:
+            - READ
+            - UNREAD
+          example: UNREAD
       required:
-        - name
-        - value
-    NewExample:
+        - writerUserId
+        - receiverUserId
+        - messageContent
+        - shippingDate
+        - messageStatus
+    NewMessage:
       type: object
       properties:
-        name:
+        writerUserId:
           type: string
-          example: Example Name
-        value:
-          type: number
-          example: 123
+          example: 'user123'
+        receiverUserId:
+          type: string
+          example: 'user456'
+        messageContent:
+          type: string
+          example: Hello, how are you?
       required:
-        - name
-        - value
+        - writerUserId
+        - receiverUserId
+        - messageContent
