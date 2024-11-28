@@ -14,7 +14,7 @@ import './utils/logger.js';
 dotenv.config(); // Load environment variables
 
 const app = express(); // Create an Express application
-const port = process.env.BACKEND_PORT || 6002; // Define port
+const port = process.env.BACKEND_PORT || 6102; // Define port
 
 // Middlewares
 app.use(express.json()); // Parse JSON bodies
