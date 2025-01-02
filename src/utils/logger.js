@@ -8,6 +8,7 @@ const kafkaEnabled = process.env.KAFKA_ENABLED === 'true';
 let kafkaBroker, kafkaTopic, kafka, producer;
 
 if (kafkaEnabled) {
+  process.env.KAFKAJS_NO_PARTITIONER_WARNING = 1
   const { Kafka, Partitioners } = await import('kafkajs');
   kafkaBroker = process.env.KAFKA_BROKER ?? 'localhost:9092';
   kafkaTopic = process.env.KAFKA_TOPIC ?? 'logs';
