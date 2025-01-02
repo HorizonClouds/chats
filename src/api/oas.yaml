@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Example API
+  title: Chats API
   version: 1.0.0
   description: API documentation for chats microservice
 servers:
