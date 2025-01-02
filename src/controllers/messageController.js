@@ -15,7 +15,7 @@ const removeMongoFields = (data) => {
 export const createMessage = async (req, res, next) => {
   try {
     const newMessage = await messageService.createMessage(req.body);
-    loggerInfo(`Creating message with id: ${newMessage._id}`)
+    logger.info(`Creating message with id: ${newMessage._id}`)
     res.sendSuccess(
       removeMongoFields(newMessage),
       'Message created successfully',
@@ -29,7 +29,7 @@ export const createMessage = async (req, res, next) => {
 export const getChatBetweenUsersByWriterUserIdAndReceiverUserId = async (req, res, next) => {
   try {
     const chat = await messageService.getChatBetweenUsersByWriterUserIdAndReceiverUserId(req.params.writerUserId, req.params.receiverUserId);
-    loggerInfo(`Getting chat between users: ${req.params.writerUserId} and ${req.params.receiverUserId}`)
+    logger.info(`Getting chat between users: ${req.params.writerUserId} and ${req.params.receiverUserId}`)
     res.sendSuccess(removeMongoFields(chat));
   } catch (error) {
     next(error);
@@ -39,7 +39,7 @@ export const getChatBetweenUsersByWriterUserIdAndReceiverUserId = async (req, re
 export const updateMessageStatus = async (req, res, next) => {
   try {
     const updatedMessage = await messageService.updateMessageStatus(req.params.id);
-    loggerInfo(`Updating messageStatus with id: ${updatedMessage._id}`)
+    logger.info(`Updating messageStatus with id: ${updatedMessage._id}`)
     res.sendSuccess(
       removeMongoFields(updatedMessage),
       'MessageStatus updated successfully'
