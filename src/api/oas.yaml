@@ -58,6 +58,59 @@ paths:
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
+  /message/{id}:
+    delete:
+      summary: Delete a message
+      tags:
+        - Message
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the message to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Message deleted successfully
+        '404':
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Message not found
+                  appCode:
+                    type: string
+                    example: NOT_FOUND
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Invalid parameters
+                  appCode:
+                    type: string
+                    example: INVALID_INPUT
+                  timestamp:
+                    type: string
+                    example: '2023-10-01T12:00:00.000Z'
   /message/messageStatus/{id}:
     put:
       summary: Update the status of a message

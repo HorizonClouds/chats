@@ -48,3 +48,13 @@ export const updateMessageStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteMessage = async (req, res, next) => {
+  try {
+    const deletedMessage = await messageService.deleteMessage(req.params.id);
+    logger.info(`Deleting Message with id: ${req.params.id}`)
+    res.sendSuccess(null, 'Message deleted successfully', 204);
+  } catch (error) {
+    next(error);
+  }
+};

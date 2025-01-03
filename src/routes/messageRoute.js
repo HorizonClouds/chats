@@ -5,17 +5,19 @@ import * as messageValidator from '../middlewares/messageValidator.js';
 const router = express.Router();
 
 router.post(
-  '/v1/message', 
+  '/message', 
   messageValidator.validateCreateMessage, 
   messageController.createMessage
 );
-router.put('/v1/message/messageStatus/:id', 
+router.put('/message/messageStatus/:id', 
   messageController.updateMessageStatus
 );
+router.delete('/message/:id', messageController.deleteMessage);
 router.get(
-  '/v1/chat/:writerUserId/:receiverUserId', 
+  '/chat/:writerUserId/:receiverUserId', 
   messageController.getChatBetweenUsersByWriterUserIdAndReceiverUserId
 );
+
 
 
 

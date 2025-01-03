@@ -14,7 +14,7 @@ import './utils/logger.js';
 dotenv.config(); // Load environment variables
 
 const app = express(); // Create an Express application
-const port = process.env.BACKEND_PORT || 6102; // Define port
+const port = process.env.BACKEND_PORT || 6103; // Define port
 
 // Middlewares
 app.use(express.json()); // Parse JSON bodies
@@ -22,7 +22,7 @@ app.use(standardizedResponse); // Use custom response middleware
 app.use(cors());
 
 // Routes
-app.use('/api', messageApiRouter); // Use API routes
+app.use('/api/v1', messageApiRouter); // Use API routes
 
 
 app.get('/', (req, res) => {
@@ -48,18 +48,18 @@ if (process.env.NODE_ENV === 'test') {
 mongoose
   .connect(mongoURI)
   .then(() => {
-    console.log('Connected to MongoDB');
+    logger.info('Connected to MongoDB');
   })
   .catch((error) => {
-    console.error('Error connecting to MongoDB:', error.message);
+    logger.info('Error connecting to MongoDB:', error.message);
   });
 
 
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-  console.log(
+  logger.info(`Server is running on http://localhost:${port}`);
+  logger.info(
     `API documentation is available at http://localhost:${port}/api-docs`
   );
 });

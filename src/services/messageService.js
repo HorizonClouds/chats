@@ -47,8 +47,20 @@ export const updateMessageStatus = async (id) => {
   }
 };
 
+export const deleteMessage = async (id) => {
+  try {
+    const deletedMessage = await MessageModel.findByIdAndDelete(id);
+    if (!deletedMessage)
+      throw new NotFoundError(`Message with id: ${id} not found while deleting`);
+    return deletedMessage;
+  } catch (error) {
+    throw new NotFoundError(`Error deleting Message with id ${id}`, error);
+  }
+};
+
 export default {
   createMessage,
   getChatBetweenUsersByWriterUserIdAndReceiverUserId,
-  updateMessageStatus
+  updateMessageStatus,
+  deleteMessage,
 };
