@@ -6,7 +6,7 @@ info:
 servers:
 - url: /api/v1
   description: endpoint for development
-- url: /api/v1/feeds/api/v1
+- url: /api/v1/chats/api/v1
   description: endpoint for api gateway
 paths:
   /message:
