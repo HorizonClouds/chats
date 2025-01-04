@@ -4,7 +4,10 @@ info:
   version: 1.0.0
   description: API documentation for chats microservice
 servers:
-  - url: /api/v1
+- url: /api/v1
+  description: endpoint for development
+- url: /api/v1/feeds/api/v1
+  description: endpoint for api gateway
 paths:
   /message:
     post:

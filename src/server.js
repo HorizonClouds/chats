@@ -36,8 +36,7 @@ app.use(errorHandler);
 swaggerSetup(app);
 
 // Connect to MongoDB
-let mongoURI =
-  process.env.MONGODB_URI || 'mongodb://localhost:27017/microservice';
+let mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/microservice';
 if (process.env.NODE_ENV === 'test') {
   const mongod = new MongoMemoryServer(); // Fake MongoDB for testing
   await mongod.start();
@@ -59,9 +58,7 @@ mongoose
 // Start server
 app.listen(port, () => {
   logger.info(`Server is running on http://localhost:${port}`);
-  logger.info(
-    `API documentation is available at http://localhost:${port}/api-docs`
-  );
+  logger.info(`API documentation is available at http://localhost:${port}/api-docs`);
 });
 
 export default app; // Export the Express application
