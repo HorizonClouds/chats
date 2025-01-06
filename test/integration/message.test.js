@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import MessageModel from '../src/models/messageModel.js';
-import * as messageService from '../src/services/messageService.js';
-import { ValidationError, NotFoundError } from '../src/utils/customErrors.js';
+import MessageModel from '../../src/models/messageModel.js';
+import * as messageService from '../../src/services/messageService.js';
+import { ValidationError, NotFoundError } from '../../src/utils/customErrors.js';
 
 const exampleMessage = {
   writerUserId: 'user1',

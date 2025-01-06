@@ -1,17 +1,15 @@
-import dotenv from 'dotenv';
+import config from '../config.js';
 
-dotenv.config();
-
-const CLIENT_ID = process.env.KAFKA_SERVICE_NAME ?? 'UNKNOWN';
-const logLevel = process.env.LOGLEVEL ? process.env.LOGLEVEL : 'INFO';
-const kafkaEnabled = process.env.KAFKA_ENABLED === 'true';
+const CLIENT_ID = config.kafkaServiceName;
+const logLevel = config.logLevel;
+const kafkaEnabled = config.kafkaEnabled === 'true';
 let kafkaBroker, kafkaTopic, kafka, producer;
 
 if (kafkaEnabled) {
   process.env.KAFKAJS_NO_PARTITIONER_WARNING = 1
   const { Kafka, Partitioners } = await import('kafkajs');
-  kafkaBroker = process.env.KAFKA_BROKER ?? 'localhost:9092';
-  kafkaTopic = process.env.KAFKA_TOPIC ?? 'logs';
+  kafkaBroker = config.kafkaBroker;
+  kafkaTopic = config.kafkaTopic;
   kafka = new Kafka({ clientId: CLIENT_ID, brokers: [kafkaBroker], createPartitioner: Partitioners.LegacyPartitioner });
   producer = kafka.producer();
 

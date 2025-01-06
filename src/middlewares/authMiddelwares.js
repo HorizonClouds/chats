@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { UnauthorizedError, ForbiddenError } from '../utils/customErrors.js';
-import dotenv from 'dotenv';
-dotenv.config();
+import config from '../config.js';
 
 /*
 Example usage:
@@ -14,7 +13,7 @@ router.get('/v1/itineraries', checkAuth(), checkPlan('advanced'), checkRole('adm
 //WARNING ==============================
 // checkAuth is needed allways before other checks
 
-const jwtSecret = process.env.JWT_SECRET || 'horizon-secret';
+const jwtSecret = config.jwtSecret;
 
 export function checkAuth() {
   return (req, res, next) => {
