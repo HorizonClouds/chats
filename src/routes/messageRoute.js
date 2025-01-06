@@ -5,9 +5,9 @@ import { checkAuth, checkPlan, checkRole, checkAddon } from '../middlewares/auth
 
 const router = express.Router();
 
-router.post('/message', checkAuth(), messageValidator.validateCreateMessage, messageController.createMessage);
-router.put('/message/messageStatus/:id', checkAuth(), messageController.updateMessageStatus);
-router.delete('/message/:id', checkAuth(), messageController.deleteMessage);
+router.post('/message', checkAuth(), checkPlan('pro'), messageValidator.validateCreateMessage, messageController.createMessage);
+router.put('/message/messageStatus/:id', checkAuth(), checkPlan('pro'), messageController.updateMessageStatus);
+router.delete('/message/:id', checkAuth(), checkPlan('pro'), messageController.deleteMessage);
 router.get('/chat/:writerUserId/:receiverUserId', checkAuth(), messageController.getChatBetweenUsersByWriterUserIdAndReceiverUserId);
 
 export default router;

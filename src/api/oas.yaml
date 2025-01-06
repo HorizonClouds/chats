@@ -290,7 +290,7 @@ paths:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
 components:
-  securitySchemas:
+  securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
