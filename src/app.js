@@ -1,4 +1,5 @@
 import express from 'express'; // Import Express framework
+import rateLimit from 'express-rate-limit'; // Import rate limiting middleware
 import { swaggerSetup } from './swagger.js'; // Import Swagger setup
 import messageApiRouter from './routes/messageRoute.js'; // Import API routes
 import standardizedResponse from './middlewares/standardResponse.js'; // Import custom response middleware
@@ -9,6 +10,20 @@ import config from './config.js';
 
 export const app = express(); // Create an Express application
 const port = config.backendPort; // Define port
+
+// Apply rate limiting middleware
+const limiter = rateLimit({
+  windowMs: config.throttleWindowMs, 
+  max: config.throttleMax, 
+  message: {
+    status: 'error',
+    message: 'Too many requests, please try again later.',
+    appCode: 'TOO_MANY_REQUESTS',
+    timestamp: new Date().toISOString(),
+  },
+});
+
+app.use(limiter);
 
 // Middlewares
 app.use(express.json()); // Parse JSON bodies

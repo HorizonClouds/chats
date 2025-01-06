@@ -14,4 +14,7 @@ export default {
   kafkaBroker: process.env.KAFKA_BROKER || 'localhost:9092',
   kafkaTopic: process.env.KAFKA_TOPIC || 'logs',
   kafkaServiceName: process.env.KAFKA_SERVICE_NAME || 'CHATS',
+  // Throttling configuration
+  throttleWindowMs: process.env.THROTTLE_WINDOW_MS || 10000,
+  throttleMax: process.env.THROTTLE_MAX || 100,
 };

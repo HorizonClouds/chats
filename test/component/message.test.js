@@ -140,4 +140,19 @@ describe('[Integration][Component] Message Tests', () => {
     expect(response.status).toBe(400);
     expect(response.body.appCode).toBe('VALIDATION_ERROR');
   });
+
+  it('[-] should return 429 if too many requests are made', async () => {
+    for (let i = 0; i < 101; i++) {
+      await request(app)
+        .post('/api/v1/message')
+        .set('Authorization', `Bearer ${token1}`)
+        .send(example2Message);
+    }
+    const response = await request(app)
+      .post('/api/v1/message')
+      .set('Authorization', `Bearer ${token1}`)
+      .send(example2Message);
+    expect(response.status).toBe(429);
+    expect(response.body).toHaveProperty('message', 'Too many requests, please try again later.');
+  });
 });

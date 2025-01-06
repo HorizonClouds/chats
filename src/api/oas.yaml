@@ -3,6 +3,10 @@ info:
   title: Chats API
   version: 1.0.0
   description: API documentation for chats microservice
+  x-rateLimit:
+    window: 10 segundos
+    maxRequests: 100
+    message: Too many requests, please try again later.
 servers:
 - url: /api/v1
   description: endpoint for development
@@ -61,6 +65,12 @@ paths:
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThrottleError'
   /message/{id}:
     delete:
       summary: Delete a message
@@ -114,6 +124,12 @@ paths:
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThrottleError'
   /message/messageStatus/{id}:
     put:
       summary: Update the status of a message
@@ -209,6 +225,12 @@ paths:
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThrottleError'
   /chat/{writerUserId}/{receiverUserId}:
     get:
       summary: Get chat between two users
@@ -289,6 +311,12 @@ paths:
                   timestamp:
                     type: string
                     example: '2023-10-01T12:00:00.000Z'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThrottleError'
 components:
   securitySchemes:
     bearerAuth:
@@ -343,5 +371,20 @@ components:
         - writerUserId
         - receiverUserId
         - messageContent
+    ThrottleError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Too many requests, please try again later.
+        appCode:
+          type: string
+          example: TOO_MANY_REQUESTS
+        timestamp:
+          type: string
+          example: '2023-10-01T12:00:00.000Z'
 security:
   - bearerAuth: []
