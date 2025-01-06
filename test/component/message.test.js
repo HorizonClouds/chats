@@ -21,10 +21,6 @@ const example2Message = {
     messageContent: 'Hello, this is a test message',
 };
 
-const example3Message = {
-    messageStatus: 'INVALID_STATUS'
-};
-
 const user1payload = {
   user: {
     userId: "user1",
