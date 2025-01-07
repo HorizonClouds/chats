@@ -1,9 +1,9 @@
-name: Generate a develop version in Docker Hub
+name: Generate a production version in Docker Hub
 
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   upload-to-docker-hub:
@@ -28,4 +28,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: javifdez7/horizon-chats:develop
+          tags: javifdez7/horizon-chats:v1.0.0
