@@ -1,5 +1,7 @@
 import MessageModel from '../models/messageModel.js';
 import { NotFoundError, ValidationError } from '../utils/customErrors.js';
+import config from '../config.js';
+import { sendNotificationToKafka } from '../utils/notificationProducer.js';
 
 export const createMessage = async (data) => {
   let newMessage;
@@ -10,6 +12,22 @@ export const createMessage = async (data) => {
     await newMessage.validate();
   } catch (error) {
     throw new ValidationError('Mongoose validation exception while creating message', error);
+  }
+  if(config.infrastructureIntegration === "true") {
+    try {
+      const transformedNotification = {
+        userId: newMessage.receiverUserId,
+        config: {
+          email: true,
+        },
+        type: "message",
+        resourceId: newMessage._id, 
+        notificationStatus: 'NOT SEEN',  
+      };
+      await sendNotificationToKafka(transformedNotification);
+    } catch (error) {
+     return null;
+    }
   }
   return await newMessage.save();
 };
