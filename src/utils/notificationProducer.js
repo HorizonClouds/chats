@@ -29,25 +29,23 @@ const sendNotificationToKafka = async (notificationData, retryCount = 5) => {
     if (!kafkaIsReady) {
         if (retryCount > 0) {
           retryCount--;  // Decrementamos el contador de reintentos
-          console.log(`Producer not ready, retrying in ${retryInterval}ms. Retries left: ${retryCount}`);
+          logger.info(`Producer not ready, retrying in ${retryInterval}ms. Retries left: ${retryCount}`);
           await new Promise(resolve => setTimeout(resolve, retryInterval));  // Esperamos el intervalo de tiempo
           return sendNotificationToKafka(notificationData, retryCount);  // Llamada recursiva con el nuevo retryCount
         } else {
-          console.error('Producer not ready, no retries left');
+          logger.info('Producer not ready, no retries left');
           return;  // Si no hay reintentos restantes, salimos
         }
       }
-    // Enviar el mensaje a Kafka
-    console.log('Sending message to Kafka...');
     
     await producer.send({
       topic: 'notification',  // Tema de Kafka
       messages: [{ value: JSON.stringify(notificationData) }], // Mensaje de notificación
     });
     
-    console.log('Message sent successfully');
+    logger.info('Notification sent successfully after creating message');
   } catch (error) {
-    console.error('Error sending message:', error);
+    logger.info('Error sending notification after creating message');
   }
 };
 
